@@ -1,9 +1,52 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button, Form } from 'react-bootstrap';
 
 import CustomInput from '../../components/custom-input/CustomInput';
+import { postAdminUser } from '../../helpers/axiosHelper';
+import { toast } from 'react-toastify';
+import { useSelector } from 'react-redux';
+
+const initialState = {
+  fName: '',
+  lName: '',
+  phone: '',
+  email: '',
+  password: '',
+  confirmPassword: '',
+};
 
 const AdminSignup = () => {
+  const [form, setForm] = useState(initialState);
+  const { user } = useSelector((state) => state.userInfo);
+
+  const handleOnChange = (e) => {
+    const { name, value } = e.target;
+
+    setForm({
+      ...form,
+      [name]: value,
+    });
+  };
+
+  const handleOnSubmit = async (e) => {
+    e.preventDefault();
+    console.log(form);
+
+    const { confirmPassword, ...rest } = form;
+    if (confirmPassword !== rest.password) {
+      return alert('password do not match!');
+    }
+
+    const pending = postAdminUser(rest);
+    toast.promise(pending, {
+      pending: 'Please wait',
+
+      // success: "request success",
+      // error: "error in request",
+    });
+    const { status, message } = await pending;
+    toast[status](message);
+  };
   const inputs = [
     {
       label: 'First Name',
@@ -48,13 +91,19 @@ const AdminSignup = () => {
     },
   ];
 
+  if (user?.role !== 'admin') {
+    return `<h1>Unauthorize</h1>`;
+  }
   return (
     <div>
-      <Form className='form-center border shadow-lg p-4 rounded mt-5'>
+      <Form
+        onSubmit={handleOnSubmit}
+        className='form-center border shadow-lg p-4 rounded mt-5'
+      >
         <h2>Create New Admin</h2>
         <hr />
         {inputs.map((item, i) => (
-          <CustomInput key={i} {...item} />
+          <CustomInput key={i} {...item} onChange={handleOnChange} />
         ))}
 
         <div className='d-grid mt-2'>
