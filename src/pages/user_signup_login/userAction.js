@@ -7,7 +7,7 @@ import {
 
 import { setAllUsers, setUser } from './userSlic';
 export const getUserAction = () => async (dispatch) => {
-  const { status, message, user } = await getUser();
+  const { status, user } = await getUser();
 
   if (status === 'success') {
     //send user to the store
@@ -16,7 +16,7 @@ export const getUserAction = () => async (dispatch) => {
 };
 
 export const getAllUsersAction = () => async (dispatch) => {
-  const { status, message, users } = await getAllUsers();
+  const { status, users } = await getAllUsers();
 
   if (status === 'success') {
     //send user to the store

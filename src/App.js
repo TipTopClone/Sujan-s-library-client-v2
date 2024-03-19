@@ -17,17 +17,20 @@ import {
 import MyBook from './pages/my-books/MyBook';
 import NewBook from './pages/book/NewBook';
 import { useDispatch } from 'react-redux';
-import { getAllBooksAction } from './pages/book/bookAction';
+import { fetchReviewsAction, getAllBooksAction } from './pages/book/bookAction';
 import { useEffect } from 'react';
 import UpdateBook from './pages/book/UpdateBook';
 import BookLanding from './pages/book/BookLanding';
 import { autoLogin } from './pages/user_signup_login/userAction';
+import AllAdmins from './pages/allAdmins/AllAdmins';
+import ReviewPage from './pages/book/ReviewPage';
 
 function App() {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getAllBooksAction());
     dispatch(autoLogin());
+    dispatch(fetchReviewsAction());
   }, [dispatch]);
 
   return (
@@ -40,14 +43,6 @@ function App() {
         <Route path='/book/:_id' element={<BookLanding />} />
 
         {/* private route  */}
-        <Route
-          path='/admin-signup'
-          element={
-            <PrivateRouter>
-              <AdminSignup />
-            </PrivateRouter>
-          }
-        />
 
         <Route
           path='/dashboard'
@@ -55,6 +50,14 @@ function App() {
             <PrivateRouter>
               <Dashboard />
             </PrivateRouter>
+          }
+        />
+        <Route
+          path='/admin-signup'
+          element={
+            <AdminPrivateRouter>
+              <AdminSignup />
+            </AdminPrivateRouter>
           }
         />
 
@@ -85,6 +88,15 @@ function App() {
         />
 
         <Route
+          path='/reviews'
+          element={
+            <AdminPrivateRouter>
+              <ReviewPage />
+            </AdminPrivateRouter>
+          }
+        />
+
+        <Route
           path='/students'
           element={
             <PrivateRouter>
@@ -92,15 +104,14 @@ function App() {
             </PrivateRouter>
           }
         />
-
-        {/* <Route
+        <Route
           path='/all-admins'
           element={
             <PrivateRouter>
-              <Admins />
+              <AllAdmins />
             </PrivateRouter>
           }
-        /> */}
+        />
 
         <Route
           path='/burrow-history'

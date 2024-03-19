@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { MdDashboard } from 'react-icons/md';
 import { ImBooks } from 'react-icons/im';
 import { PiStudentBold } from 'react-icons/pi';
-import { FaHistory } from 'react-icons/fa';
+import { FaHistory, FaStar } from 'react-icons/fa';
 import { FaUserCog } from 'react-icons/fa';
 import { useSelector } from 'react-redux';
 
@@ -31,6 +31,14 @@ export const Sidebar = () => {
                   to='/books'
                 >
                   <ImBooks /> Books
+                </Link>
+              </li>
+              <li>
+                <Link
+                  className='nav-link d-flex align-items-center gap-2'
+                  to='/reviews'
+                >
+                  <FaStar /> Reviews
                 </Link>
               </li>
               <li>

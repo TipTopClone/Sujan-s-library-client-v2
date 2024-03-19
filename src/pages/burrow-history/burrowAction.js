@@ -3,9 +3,9 @@ import {
   fetchBurrows,
   postBurrow,
   returnBurrowedBook,
-} from '../../helpers/axiosHelper';
-import { getABookAction } from '../book/bookAction';
-// import { setBurrows } from './burrowSlice';
+} from '../../helpers/axiosHelper.js';
+import { getABookAction } from '../book/bookAction.js';
+import { setBurrows } from './burrowSlice.js';
 
 export const postBurrowAction = (obj) => async (dispatch) => {
   const pending = postBurrow(obj);
@@ -22,28 +22,28 @@ export const postBurrowAction = (obj) => async (dispatch) => {
   }
 };
 
-// export const fetchBurrowsAction = () => async (dispatch) => {
-//   const { status, burrows } = await fetchBurrows();
+export const fetchBurrowsAction = () => async (dispatch) => {
+  const { status, burrows } = await fetchBurrows();
 
-//   if (status === 'success') {
-//     // refetch the selected burrow and update the page
+  if (status === 'success') {
+    // refetch the selected burrow and update the page
 
-//     dispatch(setBurrows(burrows));
-//   }
-// };
+    dispatch(setBurrows(burrows));
+  }
+};
 
-// export const returnBurrowActioin = (_id) => async (dispatch) => {
-//   const pending = returnBurrowedBook(_id);
-//   toast.promise(pending, {
-//     pending: 'Please wait...',
-//   });
-//   const { status, message } = await pending;
-//   toast[status](message);
+export const returnBurrowAction = (_id) => async (dispatch) => {
+  const pending = returnBurrowedBook(_id);
+  toast.promise(pending, {
+    pending: 'Please wait...',
+  });
+  const { status, message } = await pending;
+  toast[status](message);
 
-//   if (status === 'success') {
-//     // refetch all the  book
-//     //refetch all burrow
+  if (status === 'success') {
+    // refetch all the  book
+    //refetch all burrow
 
-//     dispatch(fetchBurrowsAction());
-//   }
-// };
+    dispatch(fetchBurrowsAction());
+  }
+};

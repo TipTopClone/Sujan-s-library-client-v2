@@ -8,6 +8,11 @@ export const UsersTable = ({ role }) => {
   const users = allUsers.filter((item) => item.role === role);
   return (
     <div className=''>
+      <div className='text-end mb-3'>
+        <Link to='/admin-signup'>
+          <Button>Add New Admin</Button>
+        </Link>
+      </div>
       <p className='d-flex justify-content-between'>
         <label htmlFor=''>
           {users.length} {role} found!

@@ -4,8 +4,9 @@ import { Link, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { getABookAction } from './bookAction';
 import { Button, ButtonGroup, Col, Container, Row } from 'react-bootstrap';
-import { FaStar, FaStarHalfAlt } from 'react-icons/fa';
+
 import { postBurrowAction } from '../burrow-history/burrowAction';
+import { ReviewStars } from '../../components/review-stars/ReviewStars';
 
 const BookLanding = () => {
   const dispatch = useDispatch();
@@ -14,13 +15,23 @@ const BookLanding = () => {
   const [showReview, setShowReview] = useState(false);
 
   //pull the book info from the state and implement in UI below
-  const { selectedBook } = useSelector((state) => state.bookInfo);
+  const { selectedBook, reviews } = useSelector((state) => state.bookInfo);
   const { user } = useSelector((state) => state.userInfo);
 
   useEffect(() => {
     //fetch book from server to get latest update and put in our state
     _id && dispatch(getABookAction(_id));
   }, [_id, dispatch]);
+
+  const {
+    thumbnail,
+    name,
+    author,
+    publishYear,
+    description,
+    isAvailable,
+    dueDate,
+  } = selectedBook;
 
   const handleOnBurrow = () => {
     if (
@@ -39,15 +50,19 @@ const BookLanding = () => {
     }
   };
 
-  const {
-    thumbnail,
-    name,
-    author,
-    publishYear,
-    description,
-    isAvailable,
-    dueDate,
-  } = selectedBook;
+  //TODO: only return active reviews from server
+  //temp fix : use status to active
+  const bookSpecificReviews = reviews.filter(
+    (review) => review.status === 'active' && review.bookId === _id
+  );
+
+  const avgRating =
+    bookSpecificReviews.length > 0
+      ? bookSpecificReviews.reduce((acc, item) => acc + item.rating, 0) /
+        bookSpecificReviews.length
+      : 0;
+
+  console.log(avgRating);
 
   return (
     <MainLayout>
@@ -68,13 +83,14 @@ const BookLanding = () => {
               {author} - {publishYear}
             </p>
 
-            <p className='mb-5'>
+            {/* <p className='mb-5'>
               <FaStar className='text-warning' />
               <FaStar className='text-warning' />
               <FaStar className='text-warning' />
               <FaStar className='text-warning' />
               <FaStarHalfAlt className='text-warning' />
-            </p>
+            </p> */}
+            <ReviewStars avgRating={avgRating} />
 
             <p className='pt-5'>Summary: {description?.slice(0, 120)}...</p>
 
@@ -111,98 +127,21 @@ const BookLanding = () => {
 
             {showReview ? (
               <>
-                <div className='d-flex gap-3 shadow mb-4'>
-                  <div className='avatar'>SM</div>
-                  <div className='review'>
-                    <h4>Best Book Ever</h4>
-                    <p className='mb-3'>
-                      <span>
-                        <FaStar className='text-warning' />
-                        <FaStar className='text-warning' />
-                        <FaStar className='text-warning' />
-                        <FaStar className='text-warning' />
-                        <FaStarHalfAlt className='text-warning' />
-                      </span>{' '}
-                      <small>5 days ago</small>
-                    </p>
+                {bookSpecificReviews.map((review) => (
+                  <div className='d-flex gap-3 shadow mb-4'>
+                    <div className='avatar'>{review.username}</div>
+                    <div className='review'>
+                      <h4>{review.title}</h4>
+                      <p className='mb-3'>
+                        <ReviewStars avgRating={review.rating} />
 
-                    <p>
-                      Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                      Maiores tenetur maxime eveniet, explicabo placeat harum
-                      neque vel at. Laudantium sapiente nostrum ab tempore
-                      explicabo in optio illo eligendi vitae velit.
-                    </p>
-                  </div>
-                </div>
-                <div className='d-flex gap-3 shadow mb-4'>
-                  <div className='avatar'>SM</div>
-                  <div className='review'>
-                    <h4>Best Book Ever</h4>
-                    <p className='mb-3'>
-                      <span>
-                        <FaStar className='text-warning' />
-                        <FaStar className='text-warning' />
-                        <FaStar className='text-warning' />
-                        <FaStar className='text-warning' />
-                        <FaStarHalfAlt className='text-warning' />
-                      </span>{' '}
-                      <small>5 days ago</small>
-                    </p>
+                        <small>{review.createdAt.slice(0, 10)}</small>
+                      </p>
 
-                    <p>
-                      Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                      Maiores tenetur maxime eveniet, explicabo placeat harum
-                      neque vel at. Laudantium sapiente nostrum ab tempore
-                      explicabo in optio illo eligendi vitae velit.
-                    </p>
+                      <p>{review.message}</p>
+                    </div>
                   </div>
-                </div>
-                <div className='d-flex gap-3 shadow mb-4'>
-                  <div className='avatar'>SM</div>
-                  <div className='review'>
-                    <h4>Best Book Ever</h4>
-                    <p className='mb-3'>
-                      <span>
-                        <FaStar className='text-warning' />
-                        <FaStar className='text-warning' />
-                        <FaStar className='text-warning' />
-                        <FaStar className='text-warning' />
-                        <FaStarHalfAlt className='text-warning' />
-                      </span>{' '}
-                      <small>5 days ago</small>
-                    </p>
-
-                    <p>
-                      Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                      Maiores tenetur maxime eveniet, explicabo placeat harum
-                      neque vel at. Laudantium sapiente nostrum ab tempore
-                      explicabo in optio illo eligendi vitae velit.
-                    </p>
-                  </div>
-                </div>
-                <div className='d-flex gap-3 shadow mb-4'>
-                  <div className='avatar'>SM</div>
-                  <div className='review'>
-                    <h4>Best Book Ever</h4>
-                    <p className='mb-3'>
-                      <span>
-                        <FaStar className='text-warning' />
-                        <FaStar className='text-warning' />
-                        <FaStar className='text-warning' />
-                        <FaStar className='text-warning' />
-                        <FaStarHalfAlt className='text-warning' />
-                      </span>{' '}
-                      <small>5 days ago</small>
-                    </p>
-
-                    <p>
-                      Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                      Maiores tenetur maxime eveniet, explicabo placeat harum
-                      neque vel at. Laudantium sapiente nostrum ab tempore
-                      explicabo in optio illo eligendi vitae velit.
-                    </p>
-                  </div>
-                </div>
+                ))}
               </>
             ) : (
               description

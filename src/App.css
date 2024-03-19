@@ -106,3 +106,11 @@ a {
   position: relative;
   top: -1.5rem;
 }
+
+.tr-red {
+  color: red !important;
+}
+
+.new-star:hover {
+  cursor: pointer;
+}
